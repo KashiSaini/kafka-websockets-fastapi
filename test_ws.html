@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>WS Test</title>
+</head>
+<body>
+  <h2>WebSocket Test</h2>
+  <pre id="output"></pre>
+
+  <script>
+    const output = document.getElementById("output");
+    const ws = new WebSocket("ws://localhost:8000/ws/live?symbols=ETHUSDT");
+
+    ws.onopen = () => {
+      output.textContent += "Connected\n";
+    };
+
+    ws.onmessage = (event) => {
+      output.textContent += event.data + "\n";
+    };
+
+    ws.onerror = () => {
+      output.textContent += "Error\n";
+    };
+
+    ws.onclose = () => {
+      output.textContent += "Closed\n";
+    };
+  </script>
+</body>
+</html>

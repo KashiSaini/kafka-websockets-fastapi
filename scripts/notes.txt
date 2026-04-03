@@ -1,0 +1,7 @@
+Use this order when testing:
+1. cp .env.example .env
+2. docker compose up --build
+3. Open http://localhost:8000/docs
+4. Test /symbols
+5. Test /symbols/BTCUSDT/latest
+6. Test ws://localhost:8000/ws/live?symbols=BTCUSDT,ETHUSDT
