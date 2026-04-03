@@ -5,7 +5,11 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        extra="ignore",
+    )
 
     project_name: str = Field(default="live-crypto-stream", alias="PROJECT_NAME")
     app_env: str = Field(default="development", alias="APP_ENV")
@@ -27,7 +31,10 @@ class Settings(BaseSettings):
     )
     tracked_symbols_raw: str = Field(default="btcusdt,ethusdt,bnbusdt", alias="TRACKED_SYMBOLS")
     candle_interval: str = Field(default="1m", alias="CANDLE_INTERVAL")
-    ws_push_interval_seconds: float = Field(default=1.0, alias="WS_PUSH_INTERVAL_SECONDS")
+    ws_push_interval_seconds: int = Field(default=1, alias="WS_PUSH_INTERVAL_SECONDS")
+
+    retention_hours: int = Field(default=6, alias="RETENTION_HOURS")
+    cleanup_interval_seconds: int = Field(default=300, alias="CLEANUP_INTERVAL_SECONDS")
 
     @property
     def tracked_symbols(self) -> list[str]:
