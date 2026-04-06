@@ -9,6 +9,8 @@ class Settings(BaseSettings):
 
     project_name: str = Field(default="live-crypto-stream", alias="PROJECT_NAME")
     app_env: str = Field(default="development", alias="APP_ENV")
+    admin_api_key: str = Field(default="change-me-admin-key", alias="ADMIN_API_KEY")
+    user_api_key: str = Field(default="change-me-user-key", alias="USER_API_KEY")
 
     database_url: str = Field(
         default="postgresql+asyncpg://postgres:postgres@postgres:5432/market_data",

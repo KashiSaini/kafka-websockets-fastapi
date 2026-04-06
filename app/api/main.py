@@ -1,6 +1,8 @@
 import asyncio
 from datetime import UTC, datetime
 
+from app.common.auth import require_admin, require_user_or_admin
+
 from fastapi import Depends, FastAPI, HTTPException, Query, WebSocket, WebSocketDisconnect
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -26,11 +28,11 @@ async def health() -> dict[str, str]:
 
 
 @app.get("/symbols")
-async def get_symbols() -> dict[str, list[str]]:
+async def get_symbols(_: str = Depends(require_user_or_admin)) -> dict[str, list[str]]:
     return {"symbols": settings.tracked_symbols}
 
 
-@app.get("/symbols/{symbol}/latest", response_model=LatestSnapshotResponse)
+@app.get("/symbols/{symbol}/latest", response_model=LatestSnapshotResponse, dependencies=[Depends(require_admin)])
 async def get_latest(symbol: str, db: AsyncSession = Depends(get_db)) -> LatestSnapshotResponse:
     normalized = normalize_symbol(symbol)
 
@@ -58,6 +60,7 @@ async def get_candles(
     interval: str = Query(default="1m"),
     limit: int = Query(default=100, ge=1, le=500),
     db: AsyncSession = Depends(get_db),
+    _: str = Depends(require_user_or_admin),
 ) -> list[CandleResponse]:
     normalized = normalize_symbol(symbol)
 
@@ -86,7 +89,7 @@ async def get_candles(
     ]
 
 
-@app.get("/symbols/{symbol}/stats/today", response_model=TodayStatsResponse)
+@app.get("/symbols/{symbol}/stats/today", response_model=TodayStatsResponse, dependencies=[Depends(require_admin)])
 async def get_today_stats(symbol: str, db: AsyncSession = Depends(get_db)) -> TodayStatsResponse:
     normalized = normalize_symbol(symbol)
     start_of_day_utc = datetime.now(UTC).replace(hour=0, minute=0, second=0, microsecond=0)
