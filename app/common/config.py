@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     user_api_key: str = Field(default="change-me-user-key", alias="USER_API_KEY")
 
     database_url: str = Field(
-        default="postgresql+asyncpg://postgres:postgres@postgres:5432/market_data",
+        default="postgresql+asyncpg://postgres:kashi@postgres:5432/market_data",
         alias="DATABASE_URL",
     )
 
